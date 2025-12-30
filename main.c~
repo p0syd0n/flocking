@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <raylib.h>
+#include <time.h>
+#include <stdlib.h>
+
+#define WIDTH 500
+#define HEIGHT 500
+#define BIRD_COUNT 1
+#define BIRD_RADIUS 20
+
+struct Bird {
+  float x;
+  float y;
+  float x_velocity;
+  float y_velocity;
+};
+
+struct Bird **birds;
+
+void drawBird(struct Bird* bird) {
+  DrawCircle(bird->x, bird->y, BIRD_RADIUS, (Color){100, 100, 100, 100});
+  DrawLine(bird->x, bird->y, bird->x+bird->x_velocity, bird->y+bird->y_velocity, (Color){255, 0, 0, 255});
+}
+
+
+void update() {
+  BeginDrawing();
+  ClearBackground(RAYWHITE);
+  for (int i = 0; i < BIRD_COUNT; i++) {
+    drawBird(birds[i]);
+    birds[i]->x += birds[i]->x_velocity*(1.0/GetFPS());
+    birds[i]->y += birds[i]->y_velocity * (1.0 / GetFPS());
+    printf("The bird's x, y, is now %f, %f", birds[i]->x, birds[i]->y);
+    WaitTime(1);
+  }
+  EndDrawing();
+}
+
+void setup() {
+  birds = malloc(sizeof(struct Bird*)*BIRD_COUNT);
+  birds[0] = malloc(sizeof(struct Bird));
+  birds[0]->x = 100.0;
+  birds[0]->y = 100.0;
+  birds[0]->x_velocity = 10.0;
+  birds[0]->y_velocity = 10.0;
+   
+
+  SetRandomSeed((unsigned long)time(NULL));
+  InitWindow(WIDTH, HEIGHT, "Birrds");
+  InitAudioDevice();
+  if (!IsAudioDeviceReady()) {
+    printf("Audio Device Setup Failed:(\n");
+  }
+  return;  
+}
+int main() {
+  printf("Hello, workd\n");
+  setup();
+  while (!WindowShouldClose()) {
+    update();
+  }
+  return 0;
+}
