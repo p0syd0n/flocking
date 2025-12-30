@@ -1,5 +1,0 @@
-CC = gcc
-CFLAGS = -g
-
-main: main.c
-	$(CC) $(CFLAGS) -o main main.c
